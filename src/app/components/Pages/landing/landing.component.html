@@ -1,0 +1,169 @@
+<div class="primary-content primary-typography margin-left-100-rem margin-right-100-rem">
+  <div class="row display-flex justify-content-center align-items-center margin-bottom-100-rem">
+    <div class="col l12 s12 m12 text-align-center display-flex flex-direction-row">
+      <div class="col m10 s10 l10">
+        <h1 class="title-style cl-primary-color-theme-important margin-vertical-0">Bienvenido!</h1>
+        <p class="subtitle-style highest-font margin-vertical-0">Reserva tus boletas con nosotros</p>
+      </div>
+      <div class="col m2 s2 l2">
+        <button class="primary-button button-md margin-top-150-rem" (click)="initSession = !initSession">
+          <ng-container *ngIf="!initSession">Iniciar sesión</ng-container>
+          <ng-container *ngIf="initSession">Volver</ng-container>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="!initSession">
+  <div class="row">
+    <ng-container *ngFor="let card of listCards; index as i">
+      <div class="col s12 m6 l6 margin-bottom-100-rem">
+        <div class="primary-card display-flex align-items-center border-card hoverable-card"
+          (click)="idCardSelected = card.id" [ngStyle]="{'border-color':card.color + '66',
+          background: card.color + '66' }">
+          <p class="text-style margin-vertical-0 lower-font font-weight-700-important cl-primary-color-theme-important">
+            {{ card.name }}
+          </p>
+        </div>
+      </div>
+    </ng-container>
+    <div class="col s12 m12 l12">
+      <div class="primary-card">
+        <ng-container *ngIf="idCardSelected == 0">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">Listado de eventos
+            que se realizaran proximamente.</h1>
+          <p class="text-style lowest-font cl-primary-color-theme-important">Acá en cada evento puedes ver la
+            disponibilidad de boletas que tenemos, registrate para reservar!.</p>
+          <ng-container *ngFor="let card of listEvents; index as i">
+            <div class="col s6 m4 l3 margin-bottom-100-rem">
+              <div
+                class="primary-card display-flex flex-direction-column align-items-center border-card hoverable-card">
+                <h3
+                  class="subtitle-style highest-font margin-vertical-0 lower-font font-weight-700-important cl-typographyDanger-background-status-important">
+                  {{ card.nombre }}
+                </h3>
+                <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <label class="font-weight-700-important">Ubicacion:</label>
+                  {{ card.direccion }} - {{card.ciudad}}
+                </p>
+                <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <label class="font-weight-700-important">Fecha:</label>
+                  {{ card.horario }}
+                </p>
+              </div>
+            </div>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="idCardSelected == 1">
+          <!-- Registrar usuario -->
+          <div class="row">
+            <div class="col s12 l12" [formGroup]="formCreateUser">
+              <h1 class="subtitle-style text-align-center cl-primary-color-theme-important">
+                Registro de usuario
+              </h1>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Nombre(s)</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="nombre" #nombre>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Apellidos</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="apellido" #apellido>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+              </div>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Cedula</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="cedula" #cedula>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Correo</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="correo" #correo>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                  <div *ngIf="formCreateUser.get('correo')?.errors && formCreateUser.get('correo')?.dirty">
+                    <p class="text-style cl-typographyDanger-background-status-important"
+                      *ngIf="formCreateUser.get('correo')?.hasError('email')">Requiere formato de
+                      email(ejemplo@correo.com)</p>
+                  </div>
+                </div>
+              </div>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Contraseña</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="contrasena" #contrasena>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6 display-flex">
+                  <div class="col s12 l12 align-items-center display-flex-important justify-content-center">
+                    <div class="confirm-button" (click)="statusHabeasData = !statusHabeasData"
+                      [ngClass]="{'tab-item-selected': statusHabeasData}"></div>
+                    <p class="text-style margin-left-100-rem cl-primary-color-theme-important">Autorizo el tratamiento
+                      de
+                      mis
+                      datos de acuerdo con la
+                      finalidad establecida
+                      en
+                      la política de
+                      protección de datos personales</p>
+                  </div>
+                </div>
+                <div class="col s12 l12 margin-bottom-100-rem display-flex-important justify-content-center ">
+                  <button class="primary-button border-none-important position-relative margin-top-50-rem"
+                    (click)="saveUser()">
+                    Finalizar registro
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="initSession">
+  <div class="display-flex justify-content-center">
+    <div class="l12 margin-top-100-rem">
+      <div class="row" [formGroup]="formInitSession">
+        <h3 class="title-style cl-primary-color-theme-important text-align-center">Iniciar sesión</h3>
+        <div class="col s12 l12 margin-bottom-100-rem">
+          <label class="text-style cl-primary-color-theme-important">Cedula</label>
+          <label class="primary-form-field width-100">
+            <input type="text" class="primary-input" formControlName="cedula" #cedula>
+            <ng-container [ngTemplateOutlet]="required"></ng-container>
+          </label>
+        </div>
+        <div class="col s12 l12 margin-bottom-100-rem">
+          <label class="text-style cl-primary-color-theme-important">Contraseña</label>
+          <label class="primary-form-field width-100">
+            <input type="password" class="primary-input" formControlName="contrasena" #contrasena>
+            <ng-container [ngTemplateOutlet]="required"></ng-container>
+          </label>
+          <button class="primary-button border-none-important position-relative margin-top-50-rem full-width"
+            (click)="login();">
+            Iniciar sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #required>
+  <b class="cl-typographyDanger-background-status">*</b>
+</ng-template>

@@ -1,0 +1,226 @@
+<div class="primary-content primary-typography margin-left-100-rem margin-right-100-rem">
+  <div class="row display-flex justify-content-center align-items-center margin-bottom-100-rem">
+    <div class="col l12 s12 m12 text-align-center display-flex flex-direction-row">
+      <div class="col m10 s10 l10 margin-top-100-rem">
+        <div class="primary-card">
+          <h1 class="title-style cl-primary-color-theme-important margin-vertical-0">Bienvenido!</h1>
+        </div>
+      </div>
+      <div class="col m2 s2 l2">
+        <button class="primary-button button-md margin-top-150-rem" (click)="goBack()">
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col l12">
+    <ng-container *ngFor="let card of listOptions; index as i">
+      <ng-container *ngIf="(card.permission == type_user) || type_user == 1">
+        <div class="col margin-bottom-100-rem" [ngClass]="{'s6 m6 l6': type_user == 0, 's12 m6 l3': type_user == 1}">
+          <div class="primary-card display-flex align-items-center border-card hoverable-card" (click)="init(card.id)"
+            [ngStyle]="{'border-color':card.color + '66',
+            background: card.color + '66' }">
+            <p
+              class="text-style margin-vertical-0 lower-font font-weight-700-important cl-primary-color-theme-important">
+              {{ card.name }}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <div class="col s12 m12 l12">
+      <div class="primary-card">
+        <ng-container *ngIf="idCardSelected == 0">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+            Realiza tu reserva aquí.</h1>
+          <div class="row scroll-box" style="height: 65vh;">
+            <div class="col s12 m6 l8">
+              <ng-container *ngFor="let card of listEvents; index as i">
+                <div class="col s6 m4 l4 margin-bottom-100-rem scroll-box">
+                  <div class="primary-card display-flex flex-direction-column align-items-center border-card">
+                    <h3
+                      class="subtitle-style highest-font margin-vertical-0 lower-font font-weight-700-important cl-typographyDanger-background-status-important">
+                      {{ card.nombre }}
+                    </h3>
+                    <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                      <label class="font-weight-700-important">Fecha:</label>
+                      {{ card.horario }}
+                    </p>
+                    <button class="primary-button button-md margin-top-150-rem" (click)="searchEvent(card.id_evento)">
+                      Ver información
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <ng-container *ngIf="infoSpecificEvent != null">
+              <div class="col s12 m6 l4">
+                <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+                  Información</h1>
+                <div class="col l12">
+                  <h3
+                    class="subtitle-style highest-font margin-vertical-0 lower-font font-weight-700-important cl-typographyDanger-background-status-important">
+                    {{infoSpecificEvent?.nombre}}
+                  </h3>
+                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                    <label class="font-weight-700-important">Fecha:</label>
+                    {{infoSpecificEvent?.horario}}
+                  </p>
+                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                    <label class="font-weight-700-important">Ubicación:</label>
+                    {{infoSpecificEvent?.direccion}} - {{infoSpecificEvent?.ciudad}}
+                  </p>
+                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                    <label class="font-weight-700-important">Artistas:</label>
+                    {{infoSpecificEvent?.artistas}}
+                  </p>
+                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                    <label class="font-weight-700-important">Cantidad boletas disponibles:</label>
+                    {{infoSpecificEvent?.cantidad_boletas_disponibles}}
+                  </p>
+                  <button class="primary-button button-md margin-top-150-rem"
+                    (click)="reserve(infoSpecificEvent?.id_boleta)">
+                    Reservar
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="idCardSelected == 1">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+            Gestionar reservas.</h1>
+        </ng-container>
+        <ng-container *ngIf="idCardSelected == 2">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+            Gestionar eventos.
+          </h1>
+          <!-- Registrar usuario -->
+          <div class="row scroll-box" style="height: 65vh;">
+            <div class="col s12 l6" [formGroup]="formEvent">
+              <h1 class="subtitle-style text-align-center cl-primary-color-theme-important">
+                Registro evento
+              </h1>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Nombre(s)</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="nombre" #nombre>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Ciudad</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="ciudad" #ciudad>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+              </div>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Dirección</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="direccion" #direccion>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Fecha realización</label>
+                  <label class="primary-form-field width-100">
+                    <input type="date" class="primary-input" value="2018-07-22" min="2018-01-01"
+                      formControlName="horario" #horario>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+              </div>
+              <div class="col s12 l12 margin-bottom-100-rem">
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Artistas</label>
+                  <label class="primary-form-field width-100">
+                    <input type="text" class="primary-input" formControlName="artistas" #artistas>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+                <div class="col s12 l6">
+                  <label class="text-style cl-primary-color-theme-important">Cantidad boletas disponibles</label>
+                  <label class="primary-form-field width-100">
+                    <input type="number" class="primary-input" formControlName="cantidad_boletas" #cantidad_boletas>
+                    <ng-container [ngTemplateOutlet]="required"></ng-container>
+                  </label>
+                </div>
+              </div>
+              <div class="col s12 l12 margin-bottom-100-rem display-flex-important justify-content-center ">
+                <button class="primary-button border-none-important position-relative margin-top-50-rem"
+                  (click)="addEvent()">
+                  Finalizar registro
+                </button>
+              </div>
+            </div>
+            <div class="col s12 l6 scroll-box" style="height:55vh;">
+              <h1 class="subtitle-style text-align-center cl-primary-color-theme-important">Eventos</h1>
+              <ng-container *ngFor="let card of listEvents">
+                <div class="col s6 m4 l12 margin-bottom-100-rem">
+                  <div class="primary-card display-flex flex-direction-column align-items-center border-card">
+                    <h3
+                      class="subtitle-style highest-font margin-vertical-0 lower-font font-weight-700-important cl-typographyDanger-background-status-important">
+                      {{ card.nombre }}
+                    </h3>
+                    <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                      <label class="font-weight-700-important">Fecha:</label>
+                      {{ card.horario }}
+                    </p>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="idCardSelected == 3">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+            Listado de sus reservas</h1>
+          <div class="row scroll-box" style="height: 65vh">
+            <table class="primary-table table-intermittent full-width">
+              <thead>
+                <tr>
+                  <th class="text-align-center">Nombre</th>
+                  <th class="text-align-center">Ciudad</th>
+                  <th class="text-align-center">Dirección</th>
+                  <th class="text-align-center">Fecha</th>
+                  <th class="text-align-center">Fecha reservación</th>
+                  <th class="text-align-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of allReserve">
+                  <tr>
+                    <td class="text-align-center">{{item.nombre}}</td>
+                    <td class="text-align-center">{{item.ciudad}}</td>
+                    <td class="text-align-center">{{item.direccion}}</td>
+                    <td class="text-align-center">{{item.horario}}</td>
+                    <td class="text-align-center">{{item.fecha_reservacion}}</td>
+                    <td class="text-align-center"
+                      [ngClass]="{'cl-typographyDanger-background-status': item.estado == 0, 'cl-typographySuccess-background-status': type_user == 1}">
+                      {{item.estado == 0 ? 'Pendiente' : 'Asignado'}}</td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="allReserve.length === 0">
+                  <tr>
+                    <td class="text-align-center" colspan="3">
+                      <h1>No hay informacion</h1>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #required>
+  <b class="cl-typographyDanger-background-status">*</b>
+</ng-template>
