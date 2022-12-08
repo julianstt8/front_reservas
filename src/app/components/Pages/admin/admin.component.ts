@@ -28,33 +28,34 @@ export class AdminComponent implements OnInit {
   public listOptions = [
     {
       id: 0,
-      name: 'Reservar',
+      name: 'Reservar boletas',
       color: '#3ABCB1',
       permission: 0
     },
     {
       id: 1,
-      name: 'Gestionar reservas',
+      name: 'Gestionar reservas boletas',
       color: '#3ABCB1',
       permission: 1
     },
     {
       id: 2,
-      name: 'Gestionar eventos',
-      color: '#3ABCB1',
-      permission: 1
-    },
-    {
-      id: 3,
       name: 'Ver mis reservas',
       color: '#3ABCB1',
       permission: 0
+    },
+    {
+      id: 3,
+      name: 'Gestionar eventos',
+      color: '#3ABCB1',
+      permission: 1
     }
   ]
 
   public idCardSelected = 0;
 
   public allReserve: any;
+  public myReserve: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -71,11 +72,12 @@ export class AdminComponent implements OnInit {
     this.init(this.idCardSelected);
     this.initForms();
     this.getEvents();
-    this.getReserve();
+    this.getReserve("user");
   }
 
   init = (idCard: any) => {
     this.idCardSelected = idCard;
+    if (this.idCardSelected == 1) this.getReserve();
   }
 
   /** Inicializa los formularios */
@@ -102,9 +104,7 @@ export class AdminComponent implements OnInit {
     })
   }
 
-  /**
-   * Añadir evento
-   */
+  /** Añadir evento*/
   addEvent = () => {
     if (this.formEvent.valid) {
       this.eventWeb.addEvent(this.formEvent.value).subscribe((response: any) => {
@@ -121,15 +121,28 @@ export class AdminComponent implements OnInit {
     }
   }
 
+  /** Lista la informacion de el evento */
+  searchEvent = (id_event: any) => {
+    this.infoSpecificEvent = this.listEvents.filter((elm: any) => elm.id_evento == id_event)[0];
+  }
+
   /** Trae todas las reservas */
-  getReserve = () => {
-    const params = new FormData();
-    params.append('cedula', this.user);
-    this.eventWeb.getReserve(params).subscribe((response: any) => {
-      if (response['status'] == 1) {
-        this.allReserve = response['message'];
-      }
-    })
+  getReserve = (type = "all") => {
+    if (type == "all") {
+      this.eventWeb.getAllReserve().subscribe((response: any) => {
+        if (response['status'] == 1) {
+          this.allReserve = response['message'];
+        }
+      })
+    } else {
+      const params = new FormData();
+      params.append('cedula', this.user);
+      this.eventWeb.getReserve(params).subscribe((response: any) => {
+        if (response['status'] == 1) {
+          this.myReserve = response['message'];
+        }
+      })
+    }
   }
   /** Realizar la reserva de la boleta */
   reserve = (id_boleta: any) => {
@@ -153,11 +166,17 @@ export class AdminComponent implements OnInit {
     })
   }
 
-  /** Lista la informacion de el evento */
-  searchEvent = (id_event: any) => {
-    this.infoSpecificEvent = this.listEvents.filter((elm: any) => elm.id_evento == id_event)[0];
+  /** Modificamos el estado de la reserva */
+  actionReserve = (action: any, id_reservacion: any) => {
+    const params = new FormData();
+    params.append('id_reservacion', id_reservacion);
+    params.append('status', action);
+    this.eventWeb.setStatusReserve(params).subscribe((response: any) => {
+      if (response['status'] == 1) {
+        this.getReserve();
+      }
+    });
   }
-
 
   /** Retorna al landing */
   goBack = () => {

@@ -12,8 +12,11 @@ export class EventWebService {
 
   /** Consulta todos los usuarios */
   public getEvents = () => this.http.get(`${this.url}/getEvents`);
+  /** Trae todas las reservas */
+  public getAllReserve = () => this.http.get(`${this.url}/getAllReserve`);
   /**Inserta nuevo evento */
   public addEvent = (params: any) => this.http.post(`${this.url}/addEvent`, params);
+  public setStatusReserve = (params: any) => this.http.post(`${this.url}/setStatusReserve`, params);
   /** Añade reserva de boleto */
   public addReserve = (params: any) => this.http.post(`${this.url}/addReserve`, params);
   /** Trae todas las reservas */

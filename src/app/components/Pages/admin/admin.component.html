@@ -36,7 +36,7 @@
           <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
             Realiza tu reserva aquí.</h1>
           <div class="row scroll-box" style="height: 65vh;">
-            <div class="col s12 m6 l8">
+            <div class="col s12 m6 l7">
               <ng-container *ngFor="let card of listEvents; index as i">
                 <div class="col s6 m4 l4 margin-bottom-100-rem scroll-box">
                   <div class="primary-card display-flex flex-direction-column align-items-center border-card">
@@ -48,6 +48,7 @@
                       <label class="font-weight-700-important">Fecha:</label>
                       {{ card.horario }}
                     </p>
+
                     <button class="primary-button button-md margin-top-150-rem" (click)="searchEvent(card.id_evento)">
                       Ver información
                     </button>
@@ -56,34 +57,40 @@
               </ng-container>
             </div>
             <ng-container *ngIf="infoSpecificEvent != null">
-              <div class="col s12 m6 l4">
+              <div class="col s12 m6 l5">
                 <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
                   Información</h1>
                 <div class="col l12">
                   <h3
-                    class="subtitle-style highest-font margin-vertical-0 lower-font font-weight-700-important cl-typographyDanger-background-status-important">
+                    class="subtitle-style highest-font margin-vertical-0 font-weight-700-important cl-typographyDanger-background-status-important">
                     {{infoSpecificEvent?.nombre}}
                   </h3>
-                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <p class="text-style lowest-font margin-vertical-0 cl-primary-color-theme-important">
                     <label class="font-weight-700-important">Fecha:</label>
                     {{infoSpecificEvent?.horario}}
                   </p>
-                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <p class="text-style lowest-font margin-vertical-0 cl-primary-color-theme-important">
                     <label class="font-weight-700-important">Ubicación:</label>
                     {{infoSpecificEvent?.direccion}} - {{infoSpecificEvent?.ciudad}}
                   </p>
-                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <p class="text-style lowest-font margin-vertical-0 cl-primary-color-theme-important">
                     <label class="font-weight-700-important">Artistas:</label>
                     {{infoSpecificEvent?.artistas}}
                   </p>
-                  <p class="text-style lowest-font margin-vertical-0 lower-font cl-primary-color-theme-important">
+                  <p class="text-style lowest-font margin-vertical-0 cl-primary-color-theme-important">
                     <label class="font-weight-700-important">Cantidad boletas disponibles:</label>
                     {{infoSpecificEvent?.cantidad_boletas_disponibles}}
                   </p>
-                  <button class="primary-button button-md margin-top-150-rem"
-                    (click)="reserve(infoSpecificEvent?.id_boleta)">
-                    Reservar
-                  </button>
+                  <ng-container *ngIf="infoSpecificEvent?.cantidad_boletas_disponibles == 0">
+                    <h3 class="subtitle-style margin-vertical-0 highest-font cl-typographyDanger-background-status">
+                      AGOTADO</h3>
+                  </ng-container>
+                  <ng-container *ngIf="infoSpecificEvent?.cantidad_boletas_disponibles > 0">
+                    <button class="primary-button button-md margin-top-150-rem"
+                      (click)="reserve(infoSpecificEvent?.id_boleta)">
+                      Reservar
+                    </button>
+                  </ng-container>
                 </div>
               </div>
             </ng-container>
@@ -92,8 +99,94 @@
         <ng-container *ngIf="idCardSelected == 1">
           <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
             Gestionar reservas.</h1>
+          <div class="row scroll-box" style="height: 65vh">
+            <table class="primary-table table-intermittent full-width">
+              <thead>
+                <tr>
+                  <th class="text-align-center">Nombre</th>
+                  <th class="text-align-center">Ciudad</th>
+                  <th class="text-align-center">Dirección</th>
+                  <th class="text-align-center">Fecha</th>
+                  <th class="text-align-center">Fecha reservación</th>
+                  <th class="text-align-center">Estado</th>
+                  <th class="text-align-center">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of allReserve">
+                  <tr>
+                    <td class="text-align-center">{{item.nombre}}</td>
+                    <td class="text-align-center">{{item.ciudad}}</td>
+                    <td class="text-align-center">{{item.direccion}}</td>
+                    <td class="text-align-center">{{item.horario}}</td>
+                    <td class="text-align-center">{{item.fecha_reservacion}}</td>
+                    <td class="text-align-center"
+                      [ngClass]="{'cl-typographyWarning-background-status': item.estado == 0, 'cl-typographySuccess-background-status': item.estado == 1, 'cl-typographyDanger-background-status': item.estado == 2}">
+                      {{item.estado == 0 ? 'Pendiente' : (item.estado === 1 ? 'Asignado' : 'Rechazado')}}</td>
+                    <td class="text-align-center">
+                      <a class="title-style text-align-center highest-font cl-typographySuccess-background-status cursor-pointer"
+                        (click)="actionReserve(1,item.id_reservacion)">
+                        Asignar</a>
+                      <a class="title-style text-align-center highest-font cl-typographyDanger-background-status cursor-pointer"
+                        (click)="actionReserve(2, item.id_reservacion)">
+                        Rechazar</a>
+                      <a class="title-style text-align-center highest-font cl-typographyWarning-background-status cursor-pointer"
+                        (click)="actionReserve(0, item.id_reservacion)">
+                        Pendiente</a>
+                    </td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="allReserve.length == 0">
+                  <tr>
+                    <td class="text-align-center" colspan="3">
+                      <h1>No hay informacion</h1>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
         </ng-container>
         <ng-container *ngIf="idCardSelected == 2">
+          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
+            Listado de sus reservas</h1>
+          <div class="row scroll-box" style="height: 65vh">
+            <table class="primary-table table-intermittent full-width">
+              <thead>
+                <tr>
+                  <th class="text-align-center">Nombre</th>
+                  <th class="text-align-center">Ciudad</th>
+                  <th class="text-align-center">Dirección</th>
+                  <th class="text-align-center">Fecha</th>
+                  <th class="text-align-center">Fecha reservación</th>
+                  <th class="text-align-center">Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of myReserve">
+                  <tr>
+                    <td class="text-align-center">{{item.nombre}}</td>
+                    <td class="text-align-center">{{item.ciudad}}</td>
+                    <td class="text-align-center">{{item.direccion}}</td>
+                    <td class="text-align-center">{{item.horario}}</td>
+                    <td class="text-align-center">{{item.fecha_reservacion}}</td>
+                    <td class="text-align-center"
+                      [ngClass]="{'cl-typographyWarning-background-status': item.estado == 0, 'cl-typographySuccess-background-status': item.estado == 1, 'cl-typographyDanger-background-status': item.estado == 2}">
+                      {{item.estado == 0 ? 'Pendiente' : (item.estado === 1 ? 'Asignado' : 'Rechazado')}}</td>
+                  </tr>
+                </ng-container>
+                <ng-container *ngIf="myReserve.length === 0">
+                  <tr>
+                    <td class="text-align-center" colspan="3">
+                      <h1>No hay informacion</h1>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="idCardSelected == 3">
           <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
             Gestionar eventos.
           </h1>
@@ -159,7 +252,7 @@
                 </button>
               </div>
             </div>
-            <div class="col s12 l6 scroll-box" style="height:55vh;">
+            <div class="col s12 l6 scroll-box" style="height:65vh;">
               <h1 class="subtitle-style text-align-center cl-primary-color-theme-important">Eventos</h1>
               <ng-container *ngFor="let card of listEvents">
                 <div class="col s6 m4 l12 margin-bottom-100-rem">
@@ -178,45 +271,7 @@
             </div>
           </div>
         </ng-container>
-        <ng-container *ngIf="idCardSelected == 3">
-          <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
-            Listado de sus reservas</h1>
-          <div class="row scroll-box" style="height: 65vh">
-            <table class="primary-table table-intermittent full-width">
-              <thead>
-                <tr>
-                  <th class="text-align-center">Nombre</th>
-                  <th class="text-align-center">Ciudad</th>
-                  <th class="text-align-center">Dirección</th>
-                  <th class="text-align-center">Fecha</th>
-                  <th class="text-align-center">Fecha reservación</th>
-                  <th class="text-align-center">Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container *ngFor="let item of allReserve">
-                  <tr>
-                    <td class="text-align-center">{{item.nombre}}</td>
-                    <td class="text-align-center">{{item.ciudad}}</td>
-                    <td class="text-align-center">{{item.direccion}}</td>
-                    <td class="text-align-center">{{item.horario}}</td>
-                    <td class="text-align-center">{{item.fecha_reservacion}}</td>
-                    <td class="text-align-center"
-                      [ngClass]="{'cl-typographyDanger-background-status': item.estado == 0, 'cl-typographySuccess-background-status': type_user == 1}">
-                      {{item.estado == 0 ? 'Pendiente' : 'Asignado'}}</td>
-                  </tr>
-                </ng-container>
-                <ng-container *ngIf="allReserve.length === 0">
-                  <tr>
-                    <td class="text-align-center" colspan="3">
-                      <h1>No hay informacion</h1>
-                    </td>
-                  </tr>
-                </ng-container>
-              </tbody>
-            </table>
-          </div>
-        </ng-container>
+
       </div>
     </div>
   </div>

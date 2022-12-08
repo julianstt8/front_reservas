@@ -2,7 +2,7 @@
 
 # Clonar especificamente rama f_julian
 
-git clone --branch f_julian https://github.com/julianstt8/inxaitFront.git
+git clone --branch f_julian https://github.com/julianstt8/front_reservas.git
 
 # Instalaciones ANGULAR
 
