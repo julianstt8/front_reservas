@@ -54,6 +54,12 @@
               </div>
             </div>
           </ng-container>
+          <ng-container *ngIf="listEvents.length == 0">
+            <div class="primary-card  hoverable-card text-align-center border-card margin-top-100-rem">
+              <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">Aún no hay
+                eventos proximos.</h1>
+            </div>
+          </ng-container>
         </ng-container>
         <ng-container *ngIf="idCardSelected == 1">
           <!-- Registrar usuario -->

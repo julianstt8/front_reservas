@@ -56,6 +56,12 @@
                 </div>
               </ng-container>
             </div>
+            <ng-container *ngIf="listEvents.length == 0">
+              <div class="primary-card  hoverable-card border-card text-align-center full-width">
+                <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">Aún no hay
+                  eventos proximos.</h1>
+              </div>
+            </ng-container>
             <ng-container *ngIf="infoSpecificEvent != null">
               <div class="col s12 m6 l5">
                 <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
@@ -194,7 +200,7 @@
           <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">
             Gestionar eventos.
           </h1>
-          <!-- Registrar usuario -->
+          <!-- Registrar eventos -->
           <div class="row scroll-box" style="height: 65vh;">
             <div class="col s12 l6" [formGroup]="formEvent">
               <h1 class="subtitle-style text-align-center cl-primary-color-theme-important">
@@ -272,10 +278,15 @@
                   </div>
                 </div>
               </ng-container>
+              <ng-container *ngIf="listEvents.length == 0">
+                <div class="primary-card  hoverable-card text-align-center">
+                  <h1 class="subtitle-style highest-font cl-primary-color-theme-important margin-vertical-0">Aún no hay
+                    eventos proximos.</h1>
+                </div>
+              </ng-container>
             </div>
           </div>
         </ng-container>
-
       </div>
     </div>
   </div>
