@@ -103,10 +103,12 @@
             <table class="primary-table table-intermittent full-width">
               <thead>
                 <tr>
-                  <th class="text-align-center">Nombre</th>
+                  <th class="text-align-center">Nombre usuario</th>
+                  <th class="text-align-center">Correo</th>
+                  <th class="text-align-center">Nombre evento</th>
+                  <th class="text-align-center">Fecha evento</th>
                   <th class="text-align-center">Ciudad</th>
                   <th class="text-align-center">Dirección</th>
-                  <th class="text-align-center">Fecha</th>
                   <th class="text-align-center">Fecha reservación</th>
                   <th class="text-align-center">Estado</th>
                   <th class="text-align-center">Acciones</th>
@@ -115,10 +117,12 @@
               <tbody>
                 <ng-container *ngFor="let item of allReserve">
                   <tr>
+                    <td class="text-align-center">{{item.nombre_usuario + " " +item.apellido}}</td>
+                    <td class="text-align-center">{{item.correo}}</td>
                     <td class="text-align-center">{{item.nombre}}</td>
+                    <td class="text-align-center">{{item.horario}}</td>
                     <td class="text-align-center">{{item.ciudad}}</td>
                     <td class="text-align-center">{{item.direccion}}</td>
-                    <td class="text-align-center">{{item.horario}}</td>
                     <td class="text-align-center">{{item.fecha_reservacion}}</td>
                     <td class="text-align-center"
                       [ngClass]="{'cl-typographyWarning-background-status': item.estado == 0, 'cl-typographySuccess-background-status': item.estado == 1, 'cl-typographyDanger-background-status': item.estado == 2}">

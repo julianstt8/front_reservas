@@ -70,14 +70,17 @@ export class AdminComponent implements OnInit {
     this.type_user = localStorage.getItem('tipo_usuario');
     this.user = localStorage.getItem('usuario');
     this.init(this.idCardSelected);
-    this.initForms();
     this.getEvents();
-    this.getReserve("user");
+    this.initForms();
   }
 
   init = (idCard: any) => {
-    this.idCardSelected = idCard;
-    if (this.idCardSelected == 1) this.getReserve();
+    if (idCard != this.idCardSelected) {
+      this.idCardSelected = idCard;
+      this.getEvents();
+      if (this.idCardSelected == 1) this.getReserve();
+      if (this.idCardSelected == 2) this.getReserve("my");
+    }
   }
 
   /** Inicializa los formularios */
@@ -132,6 +135,7 @@ export class AdminComponent implements OnInit {
       this.eventWeb.getAllReserve().subscribe((response: any) => {
         if (response['status'] == 1) {
           this.allReserve = response['message'];
+          console.log(this.allReserve);
         }
       })
     } else {
