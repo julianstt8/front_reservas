@@ -135,7 +135,6 @@ export class AdminComponent implements OnInit {
       this.eventWeb.getAllReserve().subscribe((response: any) => {
         if (response['status'] == 1) {
           this.allReserve = response['message'];
-          console.log(this.allReserve);
         }
       })
     } else {
